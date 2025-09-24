@@ -10,7 +10,7 @@ injects **chaos flows** (timeouts, throttling, partial failures), and visualizes
 
 ---
 
-## 🏗️ Architecture (Digital Twin Flow)
+##  Architecture (Digital Twin Flow)
 
 ![Architecture](docs/architecture.png)
 
@@ -23,7 +23,7 @@ injects **chaos flows** (timeouts, throttling, partial failures), and visualizes
 
 ---
 
-## 📁 Repository Structure
+##  Repository Structure
 
 ```
 neocommerce-qa-simulator/
@@ -70,7 +70,7 @@ neocommerce-qa-simulator/
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 > **Prereqs:** Node 18+ (for Newman), Python 3.10+, Google Chrome + chromedriver (or use geckodriver for Firefox).
 
@@ -101,7 +101,7 @@ python synth_metrics.py ../grafana/metrics.csv
 
 ---
 
-## 🧪 Test Types Included
+##  Test Types Included
 
 - **Functional**: authentication, product listing, cart ops, checkout, refund.
 - **Regression**: stable pack with 40+ critical flows; data‑driven inputs.
@@ -119,7 +119,7 @@ python synth_metrics.py ../grafana/metrics.csv
 
 ---
 
-## 🗂️ JIRA Workflow
+##  JIRA Workflow
 
 - Bug template and sample CSV for import.  
 - Statuses: *Open → In Progress → In Review → Done*.  
@@ -129,7 +129,7 @@ python synth_metrics.py ../grafana/metrics.csv
 
 ---
 
-## ✅ Acceptance Criteria Mapping
+## Acceptance Criteria Mapping
 
 - **AC‑1**: API suites cover end‑to‑end lifecycles with chaos toggles; Newman exit code gates the pipeline.  
 - **AC‑2**: Selenium smoke/regression prove cross‑browser parity (Chrome/Firefox matrix).  
@@ -137,14 +137,14 @@ python synth_metrics.py ../grafana/metrics.csv
 
 ---
 
-## 📦 CI hooks (suggested)
+##  CI hooks (suggested)
 
 - GitHub Actions: run Newman + Selenium on PR; upload HTML reports; push metrics to S3/CSV.  
 - Slack/JIRA notifications on failures (extend `newman/run_newman.sh`).
 
 ---
 
-## 🔐 Environments
+##  Environments
 
 Configure `baseUrl`, `authToken`, and chaos flags in the Postman environment JSON.  
 Never commit real secrets—this repo uses placeholders.
