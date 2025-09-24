@@ -1,0 +1,4 @@
+Issue Key,Summary,Status,Priority,Assignee,Labels
+NEO-101,Refund returns 500 for COD orders,Open,High,Praneetha,"refund,chaos"
+NEO-102,Throttle not respected at 50 RPS,In Progress,Critical,Jerome,"throttle,api"
+NEO-103,UI cart badge not updating,In Review,Medium,QA-Bot,"ui,regression"

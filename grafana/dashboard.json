@@ -1,0 +1,21 @@
+{
+  "title": "NeoCommerce QA KPIs",
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Transaction Accuracy %"
+    },
+    {
+      "type": "timeseries",
+      "title": "P95 Latency (ms)"
+    },
+    {
+      "type": "timeseries",
+      "title": "Defect Leakage %"
+    }
+  ],
+  "time": {
+    "from": "now-14d",
+    "to": "now"
+  }
+}

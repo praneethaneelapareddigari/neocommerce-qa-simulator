@@ -1,0 +1,244 @@
+{
+  "info": {
+    "name": "NeoCommerce API \u2013 Digital Twin",
+    "_postman_id": "abc123",
+    "description": "End-to-end marketplace API suites with chaos injection.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth \u2013 Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"email\":\"{{email}}\",\"password\":\"{{password}}\"}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200', ()=> pm.response.code===200);",
+              "const json = pm.response.json(); pm.expect(json.token).to.exist; pm.environment.set('authToken', json.token);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products \u2013 List",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/products",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "products"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200', ()=> pm.response.code===200); pm.test('Non-empty products', ()=> pm.response.json().length>0);"
+            ]
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "if(pm.environment.get('chaos_throttle')==='true'){postman.setNextRequest('Chaos \u2013 Throttle');}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cart \u2013 Add Item",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/cart",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "cart"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"productId\":1,\"qty\":1}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 201', ()=> pm.response.code===201);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Checkout \u2013 Create Order",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/order",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "order"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"paymentMethod\":\"COD\"}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('201 Created', ()=> pm.response.code===201); pm.environment.set('orderId', pm.response.json().id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Refund \u2013 Chaos",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/order/{{orderId}}/refund",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "order",
+            "{{orderId}}",
+            "refund"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"reason\":\"customer_request\"}"
+        }
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "if(pm.environment.get('chaos_timeout')==='true'){ const delay = Number(pm.environment.get('chaos_delay_ms')||1500); const s = Date.now(); while(Date.now()-s<delay){} }"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if(pm.environment.get('chaos_force_5xx')==='true'){ pm.test('Simulated 5xx tolerated', ()=> [500,502,503].includes(pm.response.code)); } else { pm.test('200/202 OK', ()=> [200,202].includes(pm.response.code)); }"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Chaos \u2013 Throttle",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/throttle",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "throttle"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('429 Throttled', ()=> pm.response.code===429);"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

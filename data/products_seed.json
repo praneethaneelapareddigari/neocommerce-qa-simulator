@@ -1,0 +1,19 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Wireless Mouse",
+      "price": 12.49
+    },
+    {
+      "id": 2,
+      "name": "USB-C Charger",
+      "price": 18.99
+    },
+    {
+      "id": 3,
+      "name": "Keyboard",
+      "price": 22.0
+    }
+  ]
+}
